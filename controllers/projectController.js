@@ -82,3 +82,30 @@ exports.updateProject = async (req, res) => {
         res.status(500).send('Server error');
     }
 }
+
+//deletes a project by id
+exports.deleteProject = async (req, res) => {
+    try {
+
+        //Check id
+        let project = await Project.findById(req.params.id);
+
+        //if project exist
+        if (!project) {
+            return res.status(404).json({msg: 'Project not found'});
+        }
+
+        //verify the author
+        if (project.author.toString() !== req.user.id) {
+            return res.status(401).json({msg: 'Not authorized'});
+        }
+
+        //finally delete
+        await Project.findOneAndRemove({_id: req.params.id});
+        res.json({msg: 'Project deleted'});
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Server error');
+    }
+}
