@@ -27,7 +27,20 @@ router.get('/',
 //update tasks
 router.put('/:id',
     auth,
+    [
+        check('project', 'The project id is required').not().isEmpty()
+    ],
     taskController.updateTask
 )
+
+//delete tasks
+router.delete('/:id',
+    auth,
+    [
+        check('project', 'The project id is required').not().isEmpty()
+    ],
+    taskController.deleteTask
+)
+
 
 module.exports = router;
